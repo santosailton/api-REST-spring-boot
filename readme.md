@@ -1,4 +1,2 @@
 # Desafio Attornatus - API REST com spring boot
-
-
-Anexos no repositório.
+ Exemplo de API REST com relacionamento entre tabelas com JPA.
