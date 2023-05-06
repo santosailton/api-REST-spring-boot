@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,13 +26,19 @@ public class PessoaService {
 
     public Pessoa cadastrar(DTOPessoa dados) {
 
-
+//        insere pessoa
         Pessoa pessoa1 = new Pessoa(dados.getNome(), dados.getDataNascimento());
         Pessoa pessoa = pessoaRepository.save(pessoa1);
 
+//        insere e associa endereco
         if (!dados.getEndereco().isEmpty()) {
-            List<Endereco> enderecos;
-            enderecos = dados.getEndereco().stream().map(x -> Endereco.toEndereco(x, pessoa)).toList();
+            List<Endereco> enderecos = new ArrayList<>();
+            //outra maneira de iterar
+//            enderecos = dados.getEndereco().stream().map(x -> Endereco.toEndereco(x, pessoa)).toList();
+            
+            //iterando com menos codigo
+            dados.getEndereco().forEach(x -> enderecos.add(Endereco.toEndereco(x ,pessoa)));
+
             enderecoRepository.saveAll(enderecos);
         }
 
