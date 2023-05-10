@@ -1,4 +1,0 @@
-docker network create minha-rede
-docker run -d --name meu-banco --network minha-rede -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=users mysql
-docker build -t minha-aplicacao .
-docker run -d --name minha-aplicacao -p 8080:8080 --network minha-rede minha-aplicacao
