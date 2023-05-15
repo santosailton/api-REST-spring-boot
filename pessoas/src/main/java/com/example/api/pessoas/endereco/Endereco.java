@@ -26,18 +26,30 @@ public class Endereco {
     private String cidade;
     private String principal;
 
-    public Endereco(EnderecoDto dados) {
-        this.logradouro = dados.getLogradouro();
-        this.pessoa = dados.getPessoa();
-        this.cep = dados.getCep();
-        this.numero = dados.getNumero();
-        this.cidade = dados.getCidade();
+    public Endereco(EnderecoDTO dados) {
+        this.logradouro = dados.logradouro();
+        this.pessoa = dados.pessoa();
+        this.cep = dados.cep();
+        this.numero = dados.numero();
+        this.cidade = dados.cidade();
     }
 
-    public static Endereco toEndereco(EnderecoDto endereco, Pessoa pessoa){
-        endereco.setPessoa(pessoa);
-        return new Endereco(endereco);
-    }
+//    public static Endereco toEndereco(EnderecoDTO endereco, Pessoa pessoa){
+//        endereco.setPessoa(pessoa);
+//        return new Endereco(endereco);
+//    }
+    public static Endereco toEndereco(EnderecoDTO endereco, Pessoa pessoa) {
+        EnderecoDTO enderecoAtualizado = new EnderecoDTO(
+            endereco.cep(),
+            endereco.cidade(),
+            endereco.logradouro(),
+            endereco.numero(),
+            pessoa,
+            endereco.principal()
+        );
+
+    return new Endereco(enderecoAtualizado);
+}
 
     public static Endereco secundario(Endereco endereco, String secundario){
         endereco.setPrincipal(secundario);

@@ -1,14 +1,14 @@
 package com.example.api.pessoas.pessoa;
 
-import com.example.api.pessoas.endereco.EnderecoDto;
+import com.example.api.pessoas.endereco.EnderecoDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-public record DTOPessoaId(
+public record PessoaIdDTO(
     @NotNull
     Long id,
     String nome,
     String dataNascimento,
     @Valid
-    EnderecoDto endereco) {
+    EnderecoDTO endereco) {
     }

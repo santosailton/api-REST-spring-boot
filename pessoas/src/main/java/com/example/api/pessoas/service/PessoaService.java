@@ -1,12 +1,12 @@
 package com.example.api.pessoas.service;
 
 
-import com.example.api.pessoas.endereco.EditarEnderecoDto;
-import com.example.api.pessoas.endereco.EnderecoDto;
+import com.example.api.pessoas.endereco.EditarEnderecoDTO;
+import com.example.api.pessoas.endereco.EnderecoDTO;
 import com.example.api.pessoas.endereco.Endereco;
 import com.example.api.pessoas.endereco.EnderecoRepository;
-import com.example.api.pessoas.pessoa.EditarPessoaDto;
-import com.example.api.pessoas.pessoa.DTOPessoa;
+import com.example.api.pessoas.pessoa.EditarPessoaDTO;
+import com.example.api.pessoas.pessoa.PessoaDTO;
 import com.example.api.pessoas.pessoa.Pessoa;
 import com.example.api.pessoas.pessoa.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +24,20 @@ public class PessoaService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-    public Pessoa cadastrar(DTOPessoa dados) {
+    public Pessoa cadastrar(PessoaDTO dados) {
 
 //        insere pessoa
-        Pessoa pessoa1 = new Pessoa(dados.getNome(), dados.getDataNascimento());
+        Pessoa pessoa1 = new Pessoa(dados.nome(), dados.dataNascimento());
         Pessoa pessoa = pessoaRepository.save(pessoa1);
 
 //        insere e associa endereco
-        if (!dados.getEndereco().isEmpty()) {
+        if (!dados.endereco().isEmpty()) {
             List<Endereco> enderecos = new ArrayList<>();
             //outra maneira de iterar
 //            enderecos = dados.getEndereco().stream().map(x -> Endereco.toEndereco(x, pessoa)).toList();
             
             //iterando com menos codigo
-            dados.getEndereco().forEach(x -> enderecos.add(Endereco.toEndereco(x ,pessoa)));
+            dados.endereco().forEach(x -> enderecos.add(Endereco.toEndereco(x ,pessoa)));
 
             enderecoRepository.saveAll(enderecos);
         }
@@ -49,7 +49,7 @@ public class PessoaService {
         return pessoaRepository.findAll();
     }
 
-    public Boolean editarPessoa(Long id, EditarPessoaDto dados) {
+    public Boolean editarPessoa(Long id, EditarPessoaDTO dados) {
 
         var pessoaEncontrada = pessoaRepository.findById(id);
         if (pessoaEncontrada.isEmpty()) {
@@ -57,33 +57,33 @@ public class PessoaService {
         }
 
         var pessoaModel = pessoaEncontrada.get();
-        if (dados.getNome() != null) {
-            pessoaModel.setNome(dados.getNome());
+        if (dados.nome() != null) {
+            pessoaModel.setNome(dados.nome());
         }
-        if (dados.getDataNascimento() != null) {
-            pessoaModel.setDataNascimento(dados.getDataNascimento());
+        if (dados.dataNascimento() != null) {
+            pessoaModel.setDataNascimento(dados.dataNascimento());
         }
         pessoaRepository.save(pessoaModel);
         return true;
     }
 
-    public ResponseEntity<?> editarEndereco(Long idPessoa, Long idEndereco, EditarEnderecoDto dados) {
+    public ResponseEntity<?> editarEndereco(Long idPessoa, Long idEndereco, EditarEnderecoDTO dados) {
         var pessoaEncontrada = pessoaRepository.findById(idPessoa);
         var enderecoEncontrado = enderecoRepository.findById(idEndereco);
 
         if (pessoaEncontrada.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada");
         }
-        if (!enderecoEncontrado.isEmpty()) {
+        if (enderecoEncontrado.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
         }
 
         var enderecoModel = enderecoEncontrado.get();
 
-        enderecoModel.setLogradouro(dados.getLogradouro());
-        enderecoModel.setCep(dados.getCep());
-        enderecoModel.setCidade(dados.getCidade());
-        enderecoModel.setNumero(dados.getNumero());
+        enderecoModel.setLogradouro(dados.logradouro());
+        enderecoModel.setCep(dados.cep());
+        enderecoModel.setCidade(dados.cidade());
+        enderecoModel.setNumero(dados.numero());
 
         enderecoRepository.save(enderecoModel);
         return ResponseEntity.status(HttpStatus.OK).body(enderecoModel);
@@ -93,7 +93,7 @@ public class PessoaService {
         return enderecoRepository.findAllByIdPessoa(idPessoa);
     }
 
-    public ResponseEntity<?> adicionaEndereco(Long idPessoa, EnderecoDto dados) {
+    public ResponseEntity<?> adicionaEndereco(Long idPessoa, EnderecoDTO dados) {
         var pessoaEncontrada = pessoaRepository.findById(idPessoa);
         if (pessoaEncontrada.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada");
@@ -127,6 +127,5 @@ public class PessoaService {
         enderecoRepository.save(enderecoModel);
         return ResponseEntity.status(HttpStatus.OK).body(enderecoModel);
     }
-
 
 }

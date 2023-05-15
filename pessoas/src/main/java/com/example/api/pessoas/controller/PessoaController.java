@@ -1,7 +1,7 @@
 package com.example.api.pessoas.controller;
 
-import com.example.api.pessoas.endereco.EditarEnderecoDto;
-import com.example.api.pessoas.endereco.EnderecoDto;
+import com.example.api.pessoas.endereco.EditarEnderecoDTO;
+import com.example.api.pessoas.endereco.EnderecoDTO;
 import com.example.api.pessoas.pessoa.*;
 import com.example.api.pessoas.service.PessoaService;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class PessoaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Pessoa> cadastrar(@RequestBody @Valid DTOPessoa dados) {
+    public ResponseEntity<Pessoa> cadastrar(@RequestBody @Valid PessoaDTO dados) {
         Pessoa pessoa = pessoaService.cadastrar(dados);
         return new ResponseEntity<>(pessoa, HttpStatus.OK);
     }
@@ -48,7 +48,7 @@ public class PessoaController {
 
     @PatchMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> atualiza(@PathVariable Long id, @RequestBody EditarPessoaDto dados) {
+    public ResponseEntity<?> atualiza(@PathVariable Long id, @RequestBody EditarPessoaDTO dados) {
         var atualizou = pessoaService.editarPessoa(id, dados);
 
         if (!atualizou) {
@@ -60,7 +60,7 @@ public class PessoaController {
     @PutMapping("/{idPessoa}/{idEndereco}")
     @Transactional
     public ResponseEntity<?> atualizaEndereco(@PathVariable Long idPessoa, @PathVariable Long idEndereco,
-                                              @RequestBody EditarEnderecoDto dados) {
+                                              @RequestBody EditarEnderecoDTO dados) {
         return pessoaService.editarEndereco(idPessoa, idEndereco, dados);
     }
 
@@ -73,7 +73,7 @@ public class PessoaController {
 
     @PostMapping("/{idPessoa}/endereco")
     @Transactional
-    public ResponseEntity<?> adicionaEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoDto dados) {
+    public ResponseEntity<?> adicionaEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoDTO dados) {
         return pessoaService.adicionaEndereco(idPessoa, dados);
     }
 
