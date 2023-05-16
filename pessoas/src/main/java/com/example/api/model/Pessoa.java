@@ -1,13 +1,14 @@
-package com.example.api.pessoas.pessoa;
+package com.example.api.model;
 
-import com.example.api.pessoas.endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Table(name = "Pessoas")
+@Table(name = "Pessoa")
 @Entity(name = "Pessoa")
 @Data
 @NoArgsConstructor
@@ -22,10 +23,10 @@ public class Pessoa {
     private String nome;
     private String dataNascimento;
     @OneToMany(mappedBy="pessoa", cascade = CascadeType.ALL)
-    private List<Endereco> enderecos = new ArrayList<>();
+    private Set<Endereco> enderecos = new HashSet<>();
 
 
-    public Pessoa(String nome, String dataNascimento, List<Endereco> enderecos){
+    public Pessoa(String nome, String dataNascimento, Set<Endereco> enderecos){
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.enderecos = enderecos;
@@ -34,14 +35,6 @@ public class Pessoa {
     public Pessoa(String nome, String dataNascimento) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
-    }
-
-    public Pessoa(Pessoa pessoa) {
-        this(pessoa.getNome(), pessoa.getDataNascimento(), pessoa.getEnderecos());
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.enderecos.add(endereco);
     }
 
 }

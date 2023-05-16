@@ -1,8 +1,5 @@
-package com.example.api.pessoas.pessoa;
+package com.example.api.dto;
 
-import lombok.Data;
-
-//@Data
 public record EditarPessoaDTO(
         String nome,
         String dataNascimento) {

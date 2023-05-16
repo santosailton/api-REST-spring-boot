@@ -1,11 +1,11 @@
-package com.example.api.pessoas.endereco;
+package com.example.api.model;
 
-import com.example.api.pessoas.pessoa.Pessoa;
+import com.example.api.dto.EnderecoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "Enderecos")
+@Table(name = "Endereco")
 @Entity(name = "Endereco")
 @Data
 @NoArgsConstructor
@@ -26,25 +26,29 @@ public class Endereco {
     private String cidade;
     private String principal;
 
+
     public Endereco(EnderecoDTO dados) {
         this.logradouro = dados.logradouro();
-        this.pessoa = dados.pessoa();
+        this.pessoa = getPessoa();
         this.cep = dados.cep();
         this.numero = dados.numero();
         this.cidade = dados.cidade();
     }
 
-//    public static Endereco toEndereco(EnderecoDTO endereco, Pessoa pessoa){
-//        endereco.setPessoa(pessoa);
-//        return new Endereco(endereco);
-//    }
-    public static Endereco toEndereco(EnderecoDTO endereco, Pessoa pessoa) {
+    public Endereco(EnderecoDTO dados, Pessoa pessoa) {
+        this.logradouro = dados.logradouro();
+        this.pessoa = pessoa;
+        this.cep = dados.cep();
+        this.numero = dados.numero();
+        this.cidade = dados.cidade();
+    }
+
+    public static Endereco toEndereco(EnderecoDTO endereco) {
         EnderecoDTO enderecoAtualizado = new EnderecoDTO(
             endereco.cep(),
             endereco.cidade(),
             endereco.logradouro(),
             endereco.numero(),
-            pessoa,
             endereco.principal()
         );
 
@@ -60,5 +64,13 @@ public class Endereco {
                 "cep="+this.cep+","+
                 "numero="+this.numero+","+
                 "cidade="+this.cidade;
+    }
+
+    public String isPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
     }
 }

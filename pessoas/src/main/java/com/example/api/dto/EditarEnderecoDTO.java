@@ -1,12 +1,8 @@
-package com.example.api.pessoas.endereco;
+package com.example.api.dto;
 
-import lombok.Data;
-
-//@Data
 public record EditarEnderecoDTO(
         String cep,
         String cidade,
         String logradouro,
-        String numero
-) {
+        String numero) {
 }
