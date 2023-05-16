@@ -200,7 +200,7 @@ PATCH /pessoas/{idPessoa}/endereco
 ```json
 {
   "nome": "novo nome",
-  "dataNascimento": "01/001/2000"
+  "dataNascimento": "01/01/2000"
 }
 ```
 6. Editar endereço por `idPessoa` e `idEndereco`:
