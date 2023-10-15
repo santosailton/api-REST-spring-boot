@@ -1,13 +1,12 @@
 package com.example.api.controller;
 
-import com.example.api.dto.EditarEnderecoDTO;
-import com.example.api.dto.EditarPessoaDTO;
-import com.example.api.dto.EnderecoDTO;
-import com.example.api.dto.PessoaDTO;
+import com.example.api.dto.*;
 import com.example.api.repositories.PessoaRepository;
 import com.example.api.service.PessoaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,34 +24,35 @@ public class PessoaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<PessoaDTO> cadastrar(@RequestBody @Valid PessoaDTO dados) {
-        var pessoaDTO = pessoaService.cadastrar(dados);
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid PessoaDTO dados) {
+        if (pessoaService.cadastrar(dados)){
+            return ResponseEntity.status(HttpStatus.CREATED).body(dados);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario já cadastrado");
 
-//        return new ResponseEntity<>(pessoaDTO, HttpStatus.OK);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dados);
+        }
 
     }
 
     @GetMapping
-    public ResponseEntity<?> lista() {
-        var pessoas = pessoaService.listar();
-
-        return ResponseEntity.status(HttpStatus.OK).body(pessoas);
+    public Page<PessoaListagemDTO> lista(Pageable paginacao) {
+        return pessoaService.listar(paginacao);
     }
 
     @GetMapping("/{idPessoa}")
-    public ResponseEntity<?> busca(@PathVariable Long idPessoa) {
+    public ResponseEntity<Object> busca(@PathVariable Long idPessoa) {
         return pessoaService.buscarPessoaId(idPessoa);
     }
 
     @PostMapping("/{idPessoa}/endereco")
     @Transactional
-    public ResponseEntity<?> adicionaEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoDTO dados) {
+    public ResponseEntity<Object> adicionaEndereco(@PathVariable Long idPessoa, @RequestBody EnderecoDTO dados) {
         return pessoaService.adicionaEndereco(idPessoa, dados);
     }
 
     @GetMapping("/{idPessoa}/enderecos")
-    public ResponseEntity<?> listarEndereco(@PathVariable Long idPessoa) {
+    public ResponseEntity<Object> listarEndereco(@PathVariable Long idPessoa) {
         var enderecos = pessoaService.listarEndereco(idPessoa);
 
         return ResponseEntity.status(HttpStatus.OK).body(enderecos);
@@ -60,8 +60,8 @@ public class PessoaController {
 
     @PatchMapping("/{idPessoa}")
     @Transactional
-    public ResponseEntity<?> atualiza(@PathVariable Long idPessoa, @RequestBody EditarPessoaDTO dados) {
-        var atualizou = pessoaService.editarPessoa(idPessoa, dados);
+    public ResponseEntity<Object> atualiza(@PathVariable Long idPessoa, @RequestBody EditarPessoaDTO dados) {
+        boolean atualizou = pessoaService.editarPessoa(idPessoa, dados);
 
         if (!atualizou) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada");
@@ -71,14 +71,14 @@ public class PessoaController {
 
     @PutMapping("/{idPessoa}/{idEndereco}")
     @Transactional
-    public ResponseEntity<?> atualizaEndereco(@PathVariable Long idPessoa, @PathVariable Long idEndereco,
+    public ResponseEntity<Object> atualizaEndereco(@PathVariable Long idPessoa, @PathVariable Long idEndereco,
                                               @RequestBody EditarEnderecoDTO dados) {
         return pessoaService.editarEndereco(idPessoa, idEndereco, dados);
     }
 
     @PatchMapping("/{idPessoa}/{idEndereco}")
     @Transactional
-    public ResponseEntity<?> enderecoPrincipal(@PathVariable Long idPessoa, @PathVariable Long idEndereco) {
+    public ResponseEntity<Object> enderecoPrincipal(@PathVariable Long idPessoa, @PathVariable Long idEndereco) {
         return pessoaService.enderecoPrincipal(idPessoa, idEndereco);
     }
 }
